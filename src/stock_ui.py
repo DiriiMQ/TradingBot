@@ -1,4 +1,4 @@
-from stock_info import StockInfo
+from .stock_info import StockInfo
 import sys
 
 class StockUI:

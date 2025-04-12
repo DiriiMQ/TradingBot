@@ -1,4 +1,4 @@
-from stock_ui import StockUI
+from .stock_ui import StockUI
 import sys
 import argparse
 

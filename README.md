@@ -16,7 +16,7 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. Install the package:
+3. Install the package in development mode:
 ```bash
 pip install -e .
 ```
@@ -27,6 +27,12 @@ After installation, you can run the trading bot using:
 
 ```bash
 trading-bot
+```
+
+Or in development mode:
+
+```bash
+python -m src.cli
 ```
 
 ### Features
@@ -41,6 +47,13 @@ trading-bot
 To run the development version:
 
 ```bash
+# Make sure you're in the virtual environment
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -e .
+
+# Run the application
 python -m src.cli
 ```
 
