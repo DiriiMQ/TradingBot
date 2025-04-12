@@ -1,41 +1,36 @@
-# from src.clean_data import DataExchangeCleaner, Exchanger, HNXData, UPCOMData, HSXData, BinanceData
-# from src.strategies import NPN_Maker
+from src.trading_bot import TradingBot
+import schedule
+import time
+import logging
 
-# hnx = DataExchangeCleaner(Exchanger.HNX, HNXData()).run()
-# upcom = DataExchangeCleaner(Exchanger.UPCOM, UPCOMData()).run()
-# hsx = DataExchangeCleaner(Exchanger.HSX, HSXData()).run()
-# binance = DataExchangeCleaner(Exchanger.BINANCE, BinanceData()).run()
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('trading_bot.log'),
+        logging.StreamHandler()
+    ]
+)
 
-# npn = NPN_Maker().initialize(binance.data)
-# print(binance.data)
+def run_trading_bot():
+    """Execute the trading bot analysis"""
+    bot = TradingBot()
+    bot.run()
 
-import os
-from dotenv import load_dotenv
-from src.crypto_system import CryptoSystem
-from src.strategies import NPN_Maker
+def main():
+    # Run immediately when starting
+    logging.info("Starting trading bot...")
+    run_trading_bot()
+    
+    # Schedule to run every day at 15:30 (market close)
+    schedule.every().day.at("15:30").do(run_trading_bot)
+    
+    logging.info("Trading bot scheduled to run daily at 15:30")
+    
+    while True:
+        schedule.run_pending()
+        time.sleep(60)
 
-from src.utils import TradingView_TA, Interval
-from src.symbol_st import Symbol
-
-dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-load_dotenv(dotenv_path)
-
-crypto = CryptoSystem()
-crypto.initialize()
-# for i in crypto.available_symbols:
-#     if i.symbol == "ETHUSDT":
-#         print(i)
-
-print(crypto.usdt)
-
-pre_train = crypto.calculate_up_to_date_balance()
-
-winner = NPN_Maker().initialize(crypto.all_symbols) # decision system
-crypto.loop(winner, 3)
-
-post_train = crypto.calculate_up_to_date_balance()
-print('Pre-train:', pre_train, 'USDT')
-print('Post-train:', post_train, 'USDT')
-print('Rate profit:', (post_train - pre_train) / pre_train * 100, '%')
-
-# crypto.sell('MDXUSDT')
+if __name__ == "__main__":
+    main()
