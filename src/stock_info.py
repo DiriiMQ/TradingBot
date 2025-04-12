@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import json
 import os
 from pathlib import Path
+from .exchange_info import ExchangeInfo
 
 # Load environment variables
 load_dotenv()
@@ -15,10 +16,10 @@ EXCHANGE_VCI = 'VCI'
 FAVORITE_SYMBOLS_FILE = 'data/favorite_symbols.json'
 DEFAULT_FAVORITE_SYMBOLS = ['VCI', 'VNM', 'FPT', 'VHM', 'VIB']
 
-class StockInfo:
+class StockInfo(ExchangeInfo):
     def __init__(self):
         """Initialize the stock information handler"""
-        self.vnstock = Vnstock()
+        super().__init__()
         self.symbols = self._load_symbols()
         self._ensure_data_directory()
 
@@ -77,10 +78,6 @@ class StockInfo:
         """Get current list of favorite symbols"""
         return self._load_favorite_symbols()
 
-    def _load_all_symbols_by_exchanges(self) -> List[str]:
-        """Load all symbols from Vnstock"""
-        return self.vnstock.stock().listing.symbols_by_exchange()
-        
     def _load_symbols(self) -> List[str]:
         """Load list of symbols to analyze from favorites"""
         return self._load_favorite_symbols()
